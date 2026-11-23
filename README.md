@@ -13,4 +13,4 @@ VALUE:
 **Link Github: link repo project ini
 **GOOGLE_GENERATIVE_AI_API_KEY
 - Buat API KEY opencode (gemini), akses link: https://aistudio.google.com/api-keys
-- If belum ada opencode, register dulu la, masa gatau
+- If belum ada opencode, register dulu laa
