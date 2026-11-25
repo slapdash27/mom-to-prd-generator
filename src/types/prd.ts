@@ -7,10 +7,6 @@ export const FALLBACK_TRANSCRIBE_MODELS = [
   "gemini-2.0-flash",
 ] as const;
 
-export const TEAM_ACCESS_STORAGE_KEY = "mom-to-prd:team-access-token";
-
-export const TEAM_ACCESS_TOKEN_HEADER = "x-team-access-token";
-
 export const MAX_AUDIO_UPLOAD_SIZE = 25 * 1024 * 1024;
 export const MAX_COMPRESSED_AUDIO_FILE_SIZE = 4.2 * 1024 * 1024;
 export const MAX_TRANSCRIBE_CHUNK_SIZE = 4 * 1024 * 1024;
@@ -77,20 +73,6 @@ export type TranscribeMomErrorCode = "NO_SPEECH";
 export interface TranscribeMomErrorResponse {
   error: string;
   code?: TranscribeMomErrorCode;
-}
-
-export interface TeamAuthStatusResponse {
-  protected: boolean;
-}
-
-export interface TeamAuthVerifyRequest {
-  password: string;
-}
-
-export interface TeamAuthVerifyResponse {
-  ok: boolean;
-  token?: string;
-  error?: string;
 }
 
 export type PrdGenerationStatus = "idle" | "streaming" | "complete" | "error";

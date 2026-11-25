@@ -15,7 +15,6 @@ menggunakan Gemini.
   upload, dan penyusunan AI.
 - Streaming output dari Gemini sehingga PRD langsung terlihat saat dibuat.
 - Export PRD ke Markdown, DOCX, dan PDF.
-- Proteksi akses tim opsional lewat password/PIN.
 
 ## Setup lokal
 
@@ -28,8 +27,8 @@ menggunakan Gemini.
 2. Salin `.env.example` menjadi `.env.local`, lalu isi variabelnya:
 
    ```env
-   GOOGLE_GENERATIVE_AI_API_KEY=your_google_ai_studio_api_key
-   TEAM_ACCESS_PASSWORD=
+    GOOGLE_GENERATIVE_AI_API_KEY=your_google_ai_studio_api_key
+
    ```
 
 3. Jalankan server pengembangan:
@@ -78,21 +77,8 @@ bukan dikarang.
 | Variabel | Wajib | Keterangan |
 | --- | --- | --- |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | Ya | API key Google AI Studio untuk Gemini. |
-| `TEAM_ACCESS_PASSWORD` | Tidak | Password/PIN akses tim. Jika dikosongkan atau tidak diset, proteksi dinonaktifkan dan workspace langsung terbuka. |
 | `GEMINI_MODEL` | Tidak | Nama model Gemini untuk generate PRD; default-nya `gemini-3.5-flash-lite`. |
 | `TRANSCRIBE_GEMINI_MODEL` | Tidak | Model Gemini untuk audio MoM; default mengikuti `GEMINI_MODEL`, fallback 404 ke `gemini-2.5-flash` lalu `gemini-2.0-flash`. |
-
-### Cara kerja proteksi akses tim
-
-- Saat `TEAM_ACCESS_PASSWORD` diisi, halaman utama menampilkan form password
-  sebelum workspace terbuka.
-- Password diverifikasi server-side oleh `/api/auth`. Status terverifikasi
-  disimpan di `sessionStorage` (berlaku untuk tab/browser session tersebut).
-- `/api/generate-prd` dan `/api/transcribe-mom` juga menolak permintaan tanpa
-  token akses yang valid, sehingga endpoint tidak bisa dipanggil langsung untuk
-  melewati gate.
-- Token berupa HMAC yang dibuat dari password di server; password tidak pernah
-  dikirim kembali ke browser setelah verifikasi.
 
 ## Deploy ke Vercel
 
@@ -102,7 +88,6 @@ bukan dikarang.
 
    ```bash
    npx vercel env add GOOGLE_GENERATIVE_AI_API_KEY production
-   npx vercel env add TEAM_ACCESS_PASSWORD production
    ```
 
 4. Deploy: `npx vercel --prod`.

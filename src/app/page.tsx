@@ -1,87 +1,29 @@
 "use client";
 
 import { useCompletion } from "@ai-sdk/react";
-import { LoaderCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Header } from "@/components/header";
 import { MomInputPanel } from "@/components/mom-input-panel";
 import { PrdPreviewPanel } from "@/components/prd-preview-panel";
-import { TeamAccessGate } from "@/components/team-access-gate";
 import { mergeMomChunks } from "@/lib/mom-merge";
 import {
-  TEAM_ACCESS_STORAGE_KEY,
-  TEAM_ACCESS_TOKEN_HEADER,
   type AudioChunk,
   type PrdViewMode,
-  type TeamAuthStatusResponse,
   type TranscribeMomErrorResponse,
   type TranscribeMomResponse,
   type TranscribeProgress,
 } from "@/types/prd";
 
-type AccessState = "checking" | "locked" | "unlocked";
-
 export default function Home() {
   const [mom, setMom] = useState("");
   const [prdViewMode, setPrdViewMode] = useState<PrdViewMode>("preview");
-  const [accessState, setAccessState] = useState<AccessState>("checking");
-  const [teamToken, setTeamToken] = useState("");
   const { completion, complete, setCompletion, isLoading, error, stop } =
     useCompletion({ api: "/api/generate-prd" });
 
-  useEffect(() => {
-    let active = true;
-
-    async function checkTeamAccess() {
-      try {
-        const response = await fetch("/api/auth", { cache: "no-store" });
-        const status = (await response.json()) as TeamAuthStatusResponse;
-
-        if (!active) {
-          return;
-        }
-
-        if (!status.protected) {
-          setAccessState("unlocked");
-          return;
-        }
-
-        const storedToken = sessionStorage.getItem(TEAM_ACCESS_STORAGE_KEY);
-
-        if (storedToken) {
-          setTeamToken(storedToken);
-        }
-
-        setAccessState(storedToken ? "unlocked" : "locked");
-      } catch {
-        if (active) {
-          setAccessState("locked");
-        }
-      }
-    }
-
-    void checkTeamAccess();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  function handleVerified(token: string) {
-    sessionStorage.setItem(TEAM_ACCESS_STORAGE_KEY, token);
-    setTeamToken(token);
-    setAccessState("unlocked");
-  }
-
   function handleGenerate() {
     setPrdViewMode("preview");
-    void complete(
-      mom,
-      teamToken
-        ? { headers: { [TEAM_ACCESS_TOKEN_HEADER]: teamToken } }
-        : undefined
-    );
+    void complete(mom);
   }
 
   async function handleTranscribe(
@@ -102,10 +44,6 @@ export default function Home() {
       >((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "/api/transcribe-mom");
-
-        if (teamToken) {
-          xhr.setRequestHeader(TEAM_ACCESS_TOKEN_HEADER, teamToken);
-        }
 
         const formData = new FormData();
         formData.append("audio", chunk.file);
@@ -196,22 +134,6 @@ export default function Home() {
     setMom("");
     setCompletion("");
     setPrdViewMode("preview");
-  }
-
-  if (accessState === "checking") {
-    return (
-      <div className="app-shell flex min-h-dvh flex-col bg-muted/30">
-        <Header />
-        <main className="flex flex-1 items-center justify-center gap-2 text-sm text-muted-foreground">
-          <LoaderCircle className="size-4 animate-spin" />
-          Memeriksa akses tim...
-        </main>
-      </div>
-    );
-  }
-
-  if (accessState === "locked") {
-    return <TeamAccessGate onVerified={handleVerified} />;
   }
 
   return (

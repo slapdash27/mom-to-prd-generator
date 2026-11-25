@@ -3,13 +3,11 @@ import { APICallError, generateText } from "ai";
 
 import { getAudioMimeType, validateCompressedAudioFile } from "@/lib/audio";
 import { buildMomTranscriptionSystemPrompt } from "@/lib/prompts";
-import { isTeamAccessTokenValid } from "@/lib/team-auth";
 import {
   DEFAULT_GEMINI_MODEL,
   FALLBACK_TRANSCRIBE_MODELS,
   MAX_TRANSCRIBE_CHUNK_SIZE,
   NO_SPEECH_SENTINEL,
-  TEAM_ACCESS_TOKEN_HEADER,
   type TranscribeMomErrorResponse,
   type TranscribeMomErrorCode,
   type TranscribeMomResponse,
@@ -121,13 +119,6 @@ function readFiniteNumber(formData: FormData, key: string): number | null {
 }
 
 export async function POST(request: Request): Promise<Response> {
-  if (!isTeamAccessTokenValid(request.headers.get(TEAM_ACCESS_TOKEN_HEADER))) {
-    return errorResponse(
-      "Akses tim belum terverifikasi. Muat ulang halaman dan masukkan password tim.",
-      401
-    );
-  }
-
   let formData: FormData;
 
   try {

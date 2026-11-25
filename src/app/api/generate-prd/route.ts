@@ -6,11 +6,9 @@ import {
   toUIMessageStream,
 } from "ai";
 import { buildPrdSystemPrompt } from "@/lib/prompts";
-import { isTeamAccessTokenValid } from "@/lib/team-auth";
 import {
   DEFAULT_GEMINI_MODEL,
   MIN_MOM_LENGTH,
-  TEAM_ACCESS_TOKEN_HEADER,
   type GeneratePrdErrorResponse,
   type GeneratePrdRequest,
 } from "@/types/prd";
@@ -40,16 +38,6 @@ function describeStreamError(error: unknown): string {
 }
 
 export async function POST(request: Request): Promise<Response> {
-  if (!isTeamAccessTokenValid(request.headers.get(TEAM_ACCESS_TOKEN_HEADER))) {
-    return Response.json(
-      {
-        error:
-          "Akses tim belum terverifikasi. Muat ulang halaman dan masukkan password tim.",
-      } satisfies GeneratePrdErrorResponse,
-      { status: 401 }
-    );
-  }
-
   let body: Partial<GeneratePrdRequest>;
 
   try {

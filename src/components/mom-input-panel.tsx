@@ -10,11 +10,12 @@ import {
   Sparkles,
   Square,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 
 import { MomVisualEditor } from "@/components/mom-visual-editor";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Card,
   CardContent,
@@ -303,11 +304,21 @@ export function MomInputPanel({
           ) : null}
         </div>
 
-        <MomVisualEditor
-          value={value}
-          onChange={onValueChange}
-          disabled={busy}
-        />
+        <Suspense
+          fallback={
+            <div className="flex min-h-64 flex-1 flex-col gap-2 rounded-md border bg-background p-3 lg:min-h-0">
+              <Skeleton className="h-6 w-1/3" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-11/12" />
+            </div>
+          }
+        >
+          <MomVisualEditor
+            value={value}
+            onChange={onValueChange}
+            disabled={busy}
+          />
+        </Suspense>
 
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>
