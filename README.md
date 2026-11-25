@@ -72,38 +72,12 @@ model mengembalikan 404/model not found, endpoint otomatis mencoba
 diterapkan: informasi yang tidak disebut di rekaman diisi dengan tanda `-`,
 bukan dikarang.
 
-## Variabel lingkungan
-
-| Variabel | Wajib | Keterangan |
-| --- | --- | --- |
-| `GOOGLE_GENERATIVE_AI_API_KEY` | Ya | API key Google AI Studio untuk Gemini. |
-| `GEMINI_MODEL` | Tidak | Nama model Gemini untuk generate PRD; default-nya `gemini-3.5-flash-lite`. |
-| `TRANSCRIBE_GEMINI_MODEL` | Tidak | Model Gemini untuk audio MoM; default mengikuti `GEMINI_MODEL`, fallback 404 ke `gemini-2.5-flash` lalu `gemini-2.0-flash`. |
-
-## Deploy ke Vercel
-
-1. Pastikan sudah login: `npx vercel login`.
-2. Hubungkan proyek: `npx vercel link`.
-3. Daftarkan environment variable Production:
-
-   ```bash
-   npx vercel env add GOOGLE_GENERATIVE_AI_API_KEY production
-   ```
-
-4. Deploy: `npx vercel --prod`.
-
-## Script
-
-- `npm run dev` — server pengembangan
-- `npm run build` — build produksi
-- `npm run typecheck` — cek tipe TypeScript
-- `npm run lint` — cek ESLint
 
 ## Prompt menjalankan proyek dengan OpenCode
 
 Use this prompt to run the project (using open code):
 
-1. Clone repositori dari `[LINK_GITHUB_KAMU]` ke folder baru, lalu masuk ke dalam folder proyek tersebut.
+1. Clone repositori dari `[LINK_GITHUB_SLAPDASH]` ke folder baru, lalu masuk ke dalam folder proyek tersebut.
 2. Jalankan `npm install` untuk menginstal seluruh dependency.
 3. Buatkan file `.env.local` berdasarkan `.env.example` dan isi `GOOGLE_GENERATIVE_AI_API_KEY=` dengan key berikut: `[TEMPEL_API_KEY_GEMINI_KAMU]`.
 4. Baca file `AGENTS.md` dan `README.md` agar memahami seluruh aturan domain, struktur template PRD, serta arsitektur aplikasi ini.
