@@ -130,6 +130,24 @@
   }
 }
 
+.mom-wysiwyg .ProseMirror {
+  min-height: 12rem;
+  outline: none;
+}
+
+.mom-wysiwyg .ProseMirror > :first-child {
+  margin-top: 0;
+}
+
+.mom-wysiwyg .ProseMirror p.is-editor-empty:first-child::before {
+  color: var(--muted-foreground);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  white-space: pre-wrap;
+}
+
 .prd-wysiwyg .ProseMirror {
   min-height: 400px;
   outline: none;

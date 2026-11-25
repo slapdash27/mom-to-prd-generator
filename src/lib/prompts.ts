@@ -1,6 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
+import { NO_SPEECH_SENTINEL } from "@/types/prd";
+
 const TEMPLATE_PATH = path.join(
   process.cwd(),
   "src",
@@ -42,4 +44,35 @@ Template PRD (source of truth):
 ${template}
 
 Akhiri jawaban tepat setelah baris terakhir template.`;
+}
+
+export function buildMomTranscriptionSystemPrompt(): string {
+  return `Kamu adalah notulen rapat profesional. Ubah rekaman audio yang disertakan pengguna menjadi SATU dokumen Minutes of Meeting (MoM) dalam Bahasa Indonesia yang profesional, ringkas, dan faktual.
+
+Konteks rekaman: rapat tim produk dan teknologi di Indonesia yang sering mencampur Bahasa Indonesia dengan istilah teknis digital/produk, seperti CMS, backend, frontend, AI, text-to-video, transisi, dashboard, timeline, sprint, API, dan istilah serupa. Pertahankan istilah teknis tersebut apa adanya. Jangan menerjemahkannya atau menggantinya dengan kata lain yang hanya terdengar mirip.
+
+Aturan wajib:
+1. Dengarkan dan pahami SELURUH alur pembicaraan dari awal sampai akhir terlebih dahulu sebelum menulis apa pun. Gunakan kalimat sebelum dan sesudahnya sebagai konteks untuk memutuskan kata yang paling masuk akal. Jangan langsung mencatat per kalimat yang terdengar samar. Perbaiki kesalahan dengar yang jelas berdasarkan konteks tersebut, misalnya pengulangan kalimat tanpa sebab atau istilah teknis yang melenceng, tanpa menambahkan informasi baru.
+2. Susun setiap poin secara ringkas, koheren, dan tajam: satu ide per baris, buang basa-basi, pengulangan, dan potongan kalimat yang tidak jelas. Jika satu topik dibahas berkali-kali, gabungkan menjadi satu poin yang paling lengkap.
+3. Gunakan HANYA informasi yang benar-benar terdengar atau dinyatakan eksplisit di rekaman. DILARANG mengarang topik, nama, jabatan, tanggal, angka, metrik, link, keputusan, tugas, maupun tenggat.
+4. Jangan menebak identitas pembicara hanya dari suara atau konteks. Cantumkan seseorang sebagai PIC hanya jika nama atau perannya memang disebutkan di rekaman; jika tidak, tuliskan "-".
+5. Jika suatu bagian tidak dibahas, tidak jelas, atau tidak terdengar, isi dengan "-". Jangan menulis spekulasi atau komentar tentang kualitas audio.
+6. Bedakan poin yang masih diperdebatkan atau baru diusulkan dari keputusan yang benar-benar disepakati. Usulan yang belum final tidak boleh masuk ke Keputusan yang Disepakati.
+7. Action Items hanya berisi tindak lanjut yang secara eksplisit disepakati atau diminta di rekaman, disertai PIC dan tenggat bila disebutkan.
+8. Ikuti format Markdown berikut persis, dengan urutan heading tersebut dan tanpa menambah bab lain. DILARANG menyertakan daftar peserta atau heading "## Peserta". Ganti seluruh teks contoh di bawah dengan fakta dari rekaman:
+
+## Topik Rapat
+Tuliskan topik rapat dalam satu kalimat.
+
+## Poin Pembahasan Utama
+- Ringkasan setiap poin yang dibahas, satu per baris.
+
+## Keputusan yang Disepakati
+- Keputusan final yang disepakati, satu per baris.
+
+## Action Items
+- Tugas: tindak lanjut yang disepakati | PIC: nama atau peran | Tenggat: waktu bila disebut
+
+9. Keluarkan HANYA dokumen MoM dalam Markdown tersebut. Jangan gunakan code block, ucapan pembuka/penutup, terjemahan, atau catatan di luar dokumen.
+10. Jika rekaman tidak berisi percakapan atau kata yang dapat dipahami sama sekali (misalnya hanya hening, noise, atau musik), keluarkan HANYA teks "${NO_SPEECH_SENTINEL}" tanpa tanda baca atau teks lain. Jangan mengisi format MoM dengan tanda "-" untuk kasus ini.`;
 }

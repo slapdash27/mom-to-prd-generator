@@ -19,9 +19,9 @@
 
 ### Background & Problem
 [Jelaskan konteks saat ini, masalah yang ingin diselesaikan, siapa yang terdampak, dan mengapa masalah ini perlu ditangani.]
-
+<!--
 ### Objectives
-* [Tuliskan hasil atau perubahan yang ingin dicapai dari inisiatif ini.]
+* [Tuliskan hasil atau perubahan yang ingin dicapai dari inisiatif ini.] -->
 
 ---
 
